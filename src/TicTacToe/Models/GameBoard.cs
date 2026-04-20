@@ -28,6 +28,10 @@ public class GameBoard : IGameBoard
         return true;
     }
 
+    // TODO: Write unit tests for everything you can do with this method...
+    // TODO: when bad position is passed (i.e. out of range)
+    // TODO: when position is passed for a position containing a marker
+    // TODO: when position is passed for a position not containing a marker
     public Marker? GetMarkerAtPosition(Position position)
     {
         if (boardMap.ContainsKey(position))

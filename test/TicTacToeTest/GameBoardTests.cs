@@ -17,6 +17,7 @@ public sealed class GameBoardTests
         // Arrange
         Position position = new() { X = posX, Y = posY};
         GameBoard gameBoard = new();
+
         var expected = true;
 
         // Act
@@ -69,23 +70,20 @@ public sealed class GameBoardTests
 
     // try to place marker when space is not empty, original value in that space doesn't change
     [TestMethod]
-    [DataRow(0, 1, Marker.O)]
-    [DataRow(1, 0, Marker.O)]
-    [DataRow(3, 1, Marker.X)]
-    [DataRow(0, 2, Marker.X)]
-    public void TryPlaceMarker__when_space_is_not_empty__original_marker_in_space_does_not_change(int posX, int posY, Marker marker)
+    [DataRow(0, 1, Marker.O, Marker.X)]
+    [DataRow(1, 0, Marker.O, Marker.X)]
+    [DataRow(3, 1, Marker.X, Marker.O)]
+    [DataRow(0, 2, Marker.X, Marker.O)]
+    public void TryPlaceMarker__when_space_is_not_empty__original_marker_in_space_does_not_change(int posX, int posY, Marker originalMarker, Marker newMarker)
     {
         // Arrange
         Position position = new() { X = posX, Y = posY};
         GameBoard gameBoard = new();
-        _ = gameBoard.TryPlaceMarker(Marker.X, position);
-        var expected = gameBoard.GetMarkerAtPosition(position);
+        _ = gameBoard.TryPlaceMarker(originalMarker, position);
+        var expected = originalMarker;
 
         // Act
-        var oppositeMarker = marker == Marker.X 
-            ? Marker.O
-            : Marker.X;
-        _ = gameBoard.TryPlaceMarker(oppositeMarker, position);
+        _ = gameBoard.TryPlaceMarker(newMarker, position);
         var actual = gameBoard.GetMarkerAtPosition(position);
 
         // Assert
