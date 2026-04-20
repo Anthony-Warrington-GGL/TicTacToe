@@ -18,8 +18,7 @@ public class GameBoard : IGameBoard
     /// <param name="position"> The given position </param>
     /// <returns> True when the position is empty, otherwise false </returns>
     public bool TryPlaceMarker(Marker marker, Position position)
-    {        
-        position = new Position { X = 2, Y = 2};
+    {
         if (boardMap.ContainsKey(position))
         {
             return false;
