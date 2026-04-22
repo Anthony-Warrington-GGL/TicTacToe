@@ -7,6 +7,10 @@ namespace TicTacToeTest;
 [TestClass]
 public sealed class GameBoardTests
 {
+    private const int DefaultBoardWidth = 3;
+    private const int DefaultBoardHeight = 3;
+    private static GameBoard CreateDefaultBoard() => new(DefaultBoardWidth, DefaultBoardHeight);
+
     [TestMethod]
     [DataRow(0, 1, Marker.O)]
     [DataRow(1, 0, Marker.O)]
@@ -16,7 +20,7 @@ public sealed class GameBoardTests
     {
         // Arrange
         Position position = new() { X = posX, Y = posY};
-        GameBoard gameBoard = new();
+        GameBoard gameBoard = CreateDefaultBoard();
 
         var expected = true;
 
@@ -36,7 +40,7 @@ public sealed class GameBoardTests
     {
         // Arrange
         Position position = new() { X = posX, Y = posY};
-        GameBoard gameBoard = new();
+        GameBoard gameBoard = CreateDefaultBoard();
         var expected = marker;
 
         // Act
@@ -57,7 +61,7 @@ public sealed class GameBoardTests
     {
         // Arrange
         Position position = new() { X = posX, Y = posY};
-        GameBoard gameBoard = new();
+        GameBoard gameBoard = CreateDefaultBoard();
         var expected = false;
         _ = gameBoard.TryPlaceMarker(marker, position);
 
@@ -78,7 +82,7 @@ public sealed class GameBoardTests
     {
         // Arrange
         Position position = new() { X = posX, Y = posY};
-        GameBoard gameBoard = new();
+        GameBoard gameBoard = CreateDefaultBoard();
         _ = gameBoard.TryPlaceMarker(originalMarker, position);
         var expected = originalMarker;
 
@@ -88,5 +92,62 @@ public sealed class GameBoardTests
 
         // Assert
         Assert.AreEqual(expected, actual);
+    }
+
+    [TestMethod]
+    [DataRow(0, 1)]
+    [DataRow(1, 0)]
+    [DataRow(3, 1)]
+    [DataRow(0, 2)]
+    public void GetMarkerAtPosition__when_position_has_no_marker__returns_null(int posX, int posY)
+    {
+        // Arrange
+        Position position = new() { X = posX, Y = posY };
+        GameBoard gameBoard = CreateDefaultBoard();
+
+        // Act
+        var actual = gameBoard.GetMarkerAtPosition(position);
+
+        // Assert
+        Assert.IsNull(actual);
+    }
+
+    [TestMethod]
+    [DataRow(0, 1, Marker.O)]
+    [DataRow(1, 0, Marker.O)]
+    [DataRow(3, 1, Marker.X)]
+    [DataRow(0, 2, Marker.X)]
+    public void GetMarkerAtPosition__when_position_has_marker__returns_marker(int posX, int posY, Marker marker)
+    {
+        // Arrange
+        Position position = new() { X = posX, Y = posY };
+        GameBoard gameBoard = CreateDefaultBoard();
+        _ = gameBoard.TryPlaceMarker(marker, position);
+        var expected = marker;
+
+        // Act
+        var actual = gameBoard.GetMarkerAtPosition(position);
+
+        // Assert
+        Assert.IsNotNull(actual);
+        Assert.AreEqual(expected, actual.Value);
+    }
+
+    [TestMethod]
+    [DataRow(-1, 0)]
+    [DataRow(0, -1)]
+    [DataRow(3, 3)]
+    [DataRow(99, 99)]
+    public void GetMarkerAtPosition__when_position_is_out_of_range__returns_null(int posX, int posY)
+    {
+        // Arrange
+        Position position = new() { X = posX, Y = posY };
+        GameBoard gameBoard = CreateDefaultBoard();
+
+        // Act
+        var actual = gameBoard.GetMarkerAtPosition(position);
+
+        // Assert
+        Assert.IsNull(actual);
     }
 }

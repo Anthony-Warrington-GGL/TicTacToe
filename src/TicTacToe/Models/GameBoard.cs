@@ -9,7 +9,15 @@ public class GameBoard : IGameBoard
 {
     public BoardState CurrentState => throw new NotImplementedException();
 
+    private readonly int _width;
+    private readonly int _height;
     private Dictionary<Position, Marker> boardMap = [];
+
+    public GameBoard(int width, int height)
+    {
+        _width = width;
+        _height = height;
+    }
 
     /// <summary>
     /// Tries to place a given marker at a given position on the board
@@ -27,17 +35,29 @@ public class GameBoard : IGameBoard
         boardMap.Add(position, marker);
         return true;
     }
-
-    // TODO: Write unit tests for everything you can do with this method...
-    // TODO: when bad position is passed (i.e. out of range)
-    // TODO: when position is passed for a position containing a marker
-    // TODO: when position is passed for a position not containing a marker
+  
     public Marker? GetMarkerAtPosition(Position position)
     {
+        ValidatePosition(position);
+
         if (boardMap.ContainsKey(position))
         {
             return boardMap[position];
         }
         return null;
+    }
+
+    private void ValidatePosition(Position position)
+    {
+        if (PositionIsOutOfBounds(position))
+        {
+            throw new ArgumentOutOfRangeException(nameof(position), 
+                $"Position ({position.X}, {position.Y}) is out of bounds for a {_width}x{_height} board.");
+        }
+    }
+
+    private bool PositionIsOutOfBounds(Position position)
+    {
+        return position.X < 0 || position.X >= _width || position.Y < 0 || position.Y >= _height;
     }
 }
