@@ -30,6 +30,7 @@ public sealed class GameBoardTests
     [DataRow(0, 3)]
     [DataRow(3, 0)]
     [DataRow(0, 0)]
+    // is it worth splitting this into separate tests for height and width?
     public void Constructor__when_given_zero_width_or_height__throws_ArgumentOutOfRangeException(int width, int height)
     {
         // Act
@@ -39,6 +40,7 @@ public sealed class GameBoardTests
         Assert.Throws<ArgumentOutOfRangeException>(act);
     }
 
+    // is it worth splitting this into separate tests for height and width?
     [TestMethod]
     [DataRow(-1, 3)]
     [DataRow(3, -1)]
@@ -54,7 +56,8 @@ public sealed class GameBoardTests
 
     // <------------------------- TryPlaceMarker ------------------------->
 
-    // Is this odd? Should I just use a normal board with an invalid position?
+    // This could be four tests - Marker.X < 0, X > BoardSize.X, same for Y
+    // replace 3x3 method with actual
     [TestMethod]
     public void TryPlaceMarker__when_position_is_out_of_range__returns_false()
     {
@@ -194,13 +197,11 @@ public sealed class GameBoardTests
         Assert.IsNull(actual);
     }
 
-    // Not sure about this test - there's no reason it would happen with a dictionary, but if the
-    // implementation ever changes from a dictionary, I feel like its still something that needs to be covered
-    // Is this overkill? If we're testing this, then why not also test three markers, then four, etc.
     [TestMethod]
     [DataRow(0, 0, Marker.X, 1, 1, Marker.O)]
     [DataRow(0, 0, Marker.O, 2, 2, Marker.X)]
     [DataRow(1, 0, Marker.X, 0, 1, Marker.O)]
+    // TODO: when a marker is placed, none of the markers at other positions change
     public void TryPlaceMarker__when_two_markers_placed_at_different_positions__each_position_holds_correct_marker(
         int posX1, int posY1, Marker marker1, int posX2, int posY2, Marker marker2)
     {
@@ -278,5 +279,4 @@ public sealed class GameBoardTests
         // Assert
         Assert.Throws<ArgumentOutOfRangeException>(act);
     }
-    // TODO: Is also it worth testing if it throws when there are markers on the board??
 }
