@@ -8,6 +8,12 @@ namespace TicTacToe.Models;
 // write the implementation
 // run the tests
 
+// created by GameBoard
+// consumed by anything needing to read the board without being able to modify it
+
+// width & height property
+// query what marker is at a given position
+
 public readonly record struct BoardState 
 {
     // whose turn it is
