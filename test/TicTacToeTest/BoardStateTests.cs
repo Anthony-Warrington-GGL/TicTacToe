@@ -7,67 +7,112 @@ namespace TicTacToeTest;
 public sealed class BoardStateTests
 {
     [TestMethod]
-    [DataRow(3, 3, 0, 0)]
-    [DataRow(3, 3, 1, 1)]
-    [DataRow(4, 4, 2, 2)]
-    [DataRow(5, 2, 4, 1)]
-    public void When_position_is_in_range_and_has_no_marker__returns_null(int width, int height, int posX, int posY)
+    // TryPlaceMarker__when_marker_is_placed__every_other_position_remains_unchanged
+    // when a position is on the board then it returns the value
+    public void IndexOperator__when_position_is_1_1_returns_the_value_at_position()
     {
         // Arrange
-        Position position = new() { X = posX, Y = posY };
-        GameBoard gameBoard = new(width, height);
-        BoardState boardState = gameBoard.CurrentState;
+            // Create a position that will be on the board
+            var position = new Position{X = 1, Y = 1};
+            var expected = BoardStateCellContent.empty;
+
+            // Create a 2D array to pass to the board
+            var markers = new BoardStateCellContent[3,3]
+            {
+                {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X},
+                {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X},
+                {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X}
+            };
+
+            // Create a board
+            var board = new BoardState(markers);
 
         // Act
-        var actual = boardState[position];
+            // Try to get the value at the position
+            var actual = board[position];
 
         // Assert
-        Assert.IsNull(actual);
+            // Check that the actual value returned is the value we expect
+            Assert.AreEqual(expected, actual);
     }
 
     [TestMethod]
-    [DataRow(3, 3, 0, 0, Marker.X)]
-    [DataRow(3, 3, 1, 1, Marker.O)]
-    [DataRow(4, 4, 3, 3, Marker.X)]
-    [DataRow(5, 2, 4, 1, Marker.O)]
-    public void When_position_is_in_range_and_has_marker__returns_correct_marker(int width, int height, int posX, int posY, Marker marker)
+    public void IndexOperator__when_position_is_1_1_and_is_X__returns_X()
     {
         // Arrange
-        Position position = new() { X = posX, Y = posY };
-        GameBoard gameBoard = new(width, height);
-        _ = gameBoard.TryPlaceMarker(marker, position);
-        BoardState boardState = gameBoard.CurrentState;
-        var expected = marker;
+            // Create a position that will be on the board
+            var position = new Position{X = 1, Y = 1};
+            var expected = BoardStateCellContent.X;
+
+            // Create a 2D array to pass to the board
+            var markers = new BoardStateCellContent[3,3]
+            {
+                {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X},
+                {BoardStateCellContent.O, BoardStateCellContent.X, BoardStateCellContent.X},
+                {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X}
+            };
+
+            // Create a board
+            var board = new BoardState(markers);
 
         // Act
-        var actual = boardState[position];
+            // Try to get the value at the position
+            var actual = board[position];
 
         // Assert
-        Assert.IsNotNull(actual);
-        Assert.AreEqual(expected, actual.Value);
+            // Check that the actual value returned is the value we expect
+            Assert.AreEqual(expected, actual);
     }
 
     [TestMethod]
-    [DataRow(3, 3, -1, 0)]
-    [DataRow(3, 3, 0, -1)]
-    [DataRow(3, 3, 3, 0)]
-    [DataRow(4, 4, 0, 4)]
-    [DataRow(5, 2, 5, 0)]
-    public void When_position_is_out_of_range__returns_null(int width, int height, int posX, int posY)
+    public void IndexOperator__when_position_is_on_board__returns_corresponding_value_at_that_position()
     {
         // Arrange
-        Position position = new() { X = posX, Y = posY };
-        GameBoard gameBoard = new(width, height);
-        BoardState boardState = gameBoard.CurrentState;
+        var markers = new BoardStateCellContent[3,3]
+        {
+            {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X},    // [0, ?]
+            {BoardStateCellContent.O, BoardStateCellContent.X, BoardStateCellContent.X},        // [1, ?]
+            {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X}     // [2, ?]
+        };
+        var board = new BoardState(markers);
 
-        // Act
-        var actual = boardState[position];
-
-        // Assert
-        Assert.IsNull(actual);
+        // Act & Assert
+        for (int r = 0; r < 3; r++)
+        {
+            for (int c = 0; c < 3; c++)
+            {
+                var expected = markers[r,c];
+                var position = new Position{X = c, Y = r};
+                var actual = board[position];
+                Assert.AreEqual(expected, actual);
+            }
+        }
     }
 
-    // TODO: "When board state is snapshot does not reflect subsequent changes to board"?
-    // i.e. when BoardState captures the board, any subsequent changes madeto the GameBoard aren't visible
-    // through it
+    [TestMethod]
+    public void IndexOperator__when_array_passed_to_constructor_is_changed__returns_original_value()
+    {
+        // Arrange
+            // Create a 2D array to pass to the board
+            var markers = new BoardStateCellContent[3,3]
+            {
+                {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X},
+                {BoardStateCellContent.O, BoardStateCellContent.X, BoardStateCellContent.X},
+                {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X}
+            };
+            var expected = BoardStateCellContent.O;
+
+            // Create a board
+            var board = new BoardState(markers);
+
+        // Act
+            // Try to get the value at the position
+            markers[0,0] = BoardStateCellContent.empty;
+            var position = new Position {X = 0, Y = 0};
+            var actual = board[position];
+
+        // Assert
+            // Check that the actual value returned is the value we expect
+            Assert.AreEqual(expected, actual);
+    }
 }

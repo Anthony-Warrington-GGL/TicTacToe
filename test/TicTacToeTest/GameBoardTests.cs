@@ -7,10 +7,6 @@ namespace TicTacToeTest;
 [TestClass]
 public sealed class GameBoardTests
 {
-    private const int DefaultBoardWidth = 3;
-    private const int DefaultBoardHeight = 3;
-    private static GameBoard Create3x3Board() => new(DefaultBoardWidth, DefaultBoardHeight);
-
     // <------------------------- Constructor ------------------------->
 
     [TestMethod]
