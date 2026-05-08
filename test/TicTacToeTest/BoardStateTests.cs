@@ -6,9 +6,8 @@ namespace TicTacToeTest;
 [TestClass]
 public sealed class BoardStateTests
 {
+    // TODO: tests for pos.X and pos.Y are less than bounds and are greater than bounds throw index out of range
     [TestMethod]
-    // TryPlaceMarker__when_marker_is_placed__every_other_position_remains_unchanged
-    // when a position is on the board then it returns the value
     public void IndexOperator__when_position_is_1_1_returns_the_value_at_position()
     {
         // Arrange
@@ -90,6 +89,33 @@ public sealed class BoardStateTests
     }
 
     [TestMethod]
+    public void IndexOperator__when_position_is_not_on_board__throws_index_out_of_range_exception()
+    {
+        // Arrange
+        // Create a position that will not be on the board
+        var position = new Position{X = 99, Y = 99};
+
+        // Create a 2D array to pass to the board
+        var markers = new BoardStateCellContent[3,3]
+        {
+            {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X},
+            {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X},
+            {BoardStateCellContent.O, BoardStateCellContent.empty, BoardStateCellContent.X}
+        };
+
+        // Create a board
+        var board = new BoardState(markers);
+
+        // Act
+        // Try to get the value at the position
+        void act() { _ = board[position]; }
+
+        // Assert
+        // Check that the actual value returned is the value we expect
+        Assert.Throws<IndexOutOfRangeException>(act);
+    }
+    
+    [TestMethod]
     public void IndexOperator__when_array_passed_to_constructor_is_changed__returns_original_value()
     {
         // Arrange
@@ -116,3 +142,6 @@ public sealed class BoardStateTests
             Assert.AreEqual(expected, actual);
     }
 }
+// TODO: Could you write an implementation that would cause the test to pass when it shouldn't?
+
+// TODO: How does this deal with different board sizes?
