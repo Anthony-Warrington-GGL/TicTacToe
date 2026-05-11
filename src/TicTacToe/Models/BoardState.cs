@@ -17,6 +17,8 @@ public readonly record struct BoardState
     {
         get
         {
+            if (position.X <= -1 || position.X >= 4 || position.Y <= -1 || position.Y >= 4)
+                return BoardStateCells[1,1];
             return BoardStateCells[position.Y, position.X];
         }
     }
