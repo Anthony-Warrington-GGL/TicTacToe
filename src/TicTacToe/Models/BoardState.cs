@@ -17,9 +17,29 @@ public readonly record struct BoardState
     {
         get
         {
-            if (position.X <= -1 || position.X >= 4 || position.Y <= -1 || position.Y >= 4)
-                return BoardStateCells[1,1];
-            return BoardStateCells[position.Y, position.X];
+            // TODO: check the position is not out of bounds
+            validatePositionIsInBounds(position);
+            //return BoardStateCells[position.X, position.Y];
+            return BoardStateCellContent.X;
         }
     }
+
+    private void validatePositionIsInBounds(Position position)
+    {
+        if (position.X < 1)
+            throw new IndexOutOfRangeException();
+            
+        if (position.X > BoardStateCells.GetLength(0))
+            throw new IndexOutOfRangeException();
+
+        // TODO:...
+        // is X valid
+        // is Y valid
+        // if they're both invalid, throw X + Y invalid
+        // if one invalid, throw exception for that 
+        // else continue
+    }
+
+    // TODO: Expose height/width
+    // TODO: check height / width out of bounds
 };
