@@ -17,27 +17,33 @@ public readonly record struct BoardState
     {
         get
         {
-            // TODO: check the position is not out of bounds
-            validatePositionIsInBounds(position);
-            //return BoardStateCells[position.X, position.Y];
-            return BoardStateCellContent.X;
+            // TODO: check the position is not out of bounds - done
+            ValidatePositionIsInBounds(position);
+            return BoardStateCells[position.X, position.Y];
+            //return BoardStateCellContent.X;
         }
     }
 
-    private void validatePositionIsInBounds(Position position)
+    private void ValidatePositionIsInBounds(Position position)
     {
+        // check X or Y aren't less than 1
         if (position.X < 1)
-            throw new IndexOutOfRangeException();
+            // TODO: make error messages consts?
+            throw new IndexOutOfRangeException("X is invalid. The value of X cannot be less than 1.");
+
+        if (position.Y < 1)
+            throw new IndexOutOfRangeException("Y is invalid. The value of Y cannot be less than 1.");
             
         if (position.X > BoardStateCells.GetLength(0))
-            throw new IndexOutOfRangeException();
+            throw new IndexOutOfRangeException($"X is invalid. The value of X cannot be greater than {BoardStateCells.GetLength(0)}.");
+        
+        if (position.Y > BoardStateCells.GetLength(1))
+            throw new IndexOutOfRangeException($"Y is invalid. The value of Y cannot be greater than {BoardStateCells.GetLength(1)}.");
 
         // TODO:...
-        // is X valid
-        // is Y valid
-        // if they're both invalid, throw X + Y invalid
-        // if one invalid, throw exception for that 
-        // else continue
+        // if just X invalid, throw X invalid message
+        // is just Y invalid, throw Y invalid message
+        // if they're both invalid, throw X + Y invalid message
     }
 
     // TODO: Expose height/width
